@@ -1,0 +1,7 @@
+.vscode/
+bin/
+.volume/
+.task/
+.sl/
+
+.run.sh

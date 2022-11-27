@@ -1,0 +1,68 @@
+version: "3"
+
+env:
+  TERM: screen-256color
+
+tasks:
+  default:
+    cmds:
+      - task: test
+
+  test:
+    desc: Run tests.
+    cmds:
+      - task: go-lint
+      - task: go-test
+
+  build:
+    desc: Build binary.
+    cmds:
+      - task: go-generate
+      - task: go-lint
+      - task: go-test
+
+  run:
+    desc: Run binary.
+    silent: true
+    cmds:
+      - task: go-generate
+      - go run ./... {{.CLI_ARGS}}
+
+  e2e:
+    desc: Run E2E test suite
+    deps: [test]
+    cmds:
+      - task: test
+      - go test -race -v ./... -tags=e2e
+
+  go-generate:
+    desc: Generate test fakes
+    sources:
+      - go.*
+      - ./**/*.go
+    cmds:
+      - go generate ./...
+
+  go-lint:
+    desc: Run linters all Go code.
+    silent: true
+    sources:
+      - go.*
+      - ./**/*.go
+      - .golangci.yml
+    cmds:
+      - gofmt -s -l -w .
+      - "
+        if ! [ -f $(go env GOPATH)/bin/golangci-lint ] 2>/dev/null;
+        then
+        curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.50.1;
+        go get -u github.com/mattn/goveralls;
+        fi;
+        "
+      - $(go env GOPATH)/bin/golangci-lint run --config .golangci.yml ./...
+
+  go-test:
+    desc: Run tests for all Go code.
+    silent: true
+    cmds:
+      - go test -race -timeout=120s -count 1 -parallel 4 -v ./...

@@ -1,0 +1,76 @@
+<feed
+	xmlns="http://www.w3.org/2005/Atom"
+	xmlns:atlassian="http://streams.atlassian.com/syndication/general/1.0">
+	<id>https://jira.demo.net/activity?maxResults=2&amp;streams=user%2BIS%2Bdemo&amp;os_authType=basic&amp;title=undefined</id>
+	<link href="https://jira.demo.net/activity?maxResults=2&amp;streams=user%2BIS%2Bdemo&amp;os_authType=basic&amp;title=undefined" rel="self"/>
+	<title type="text">Title</title>
+	<atlassian:timezone-offset>-0500</atlassian:timezone-offset>
+	<updated>2022-11-15T17:21:02.399Z</updated>
+	<entry
+		xmlns:activity="http://activitystrea.ms/spec/1.0/">
+		<id>urn:uuid:2d74e4c7-90ca-35c4-8640-fc40feb41f63</id>
+		<title type="html">&lt;a href="https://jira.demo.net/secure/ViewProfile.jspa?name=demo" class="activity-item-user activity-item-author">Demo User&lt;/a> linked 2 issues</title>
+		<content type="html">&lt;div class="jira-issue-key">       &lt;a class="issue-link" href="https://jira.demo.net/browse/TP-141">TP-141 - S1&lt;/a> &lt;/div> &lt;div class="jira-linking-text">is implemented by&lt;/div> &lt;div class="linked-jira-issue-key">       &lt;a class="issue-link" href="https://jira.demo.net/browse/TP-142">TP-142 - T1&lt;/a> &lt;/div></content>
+		<author
+			xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+			<name>Demo User</name>
+			<uri>https://jira.demo.net/secure/ViewProfile.jspa?name=demo</uri>
+			<link
+				xmlns:media="http://purl.org/syndication/atommedia" rel="photo" href="https://jira.demo.net/secure/useravatar?ownerId=demo&amp;avatarId=10900&amp;s=16" media:height="16" media:width="16"/>
+				<link
+					xmlns:media="http://purl.org/syndication/atommedia" rel="photo" href="https://jira.demo.net/secure/useravatar?ownerId=demo&amp;avatarId=10900&amp;s=48" media:height="48" media:width="48"/>
+					<usr:username>demo</usr:username>
+					<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+				</author>
+				<published>2022-11-15T15:59:36.288Z</published>
+				<updated>2022-11-15T15:59:36.288Z</updated>
+				<link href="https://jira.demo.net/browse/TP-141" rel="alternate"/>
+				<link href="https://jira.demo.net/secure/viewavatar?size=xsmall&amp;avatarId=10415&amp;avatarType=issuetype" rel="http://streams.atlassian.com/syndication/icon" title="Story"/>
+				<link href="https://jira.demo.net/s/v5oegm/820010/1dlckms/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css" rel="http://streams.atlassian.com/syndication/css"/>
+				<generator uri="https://jira.demo.net"/>
+				<atlassian:application>com.atlassian.jira</atlassian:application>
+				<activity:verb>http://activitystrea.ms/schema/1.0/update</activity:verb>
+				<activity:object>
+					<id>urn:uuid:8e35d390-8cdb-3378-bd52-2d979f631efb</id>
+					<title type="text">TP-141</title>
+					<summary type="text">S1</summary>
+					<link rel="alternate" href="https://jira.demo.net/browse/TP-141"/>
+					<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+				</activity:object>
+				<atlassian:timezone-offset>-0500</atlassian:timezone-offset>
+			</entry>
+			<entry
+				xmlns:activity="http://activitystrea.ms/spec/1.0/">
+				<id>urn:uuid:26253be2-79f0-32be-ba44-a75eca902e6d</id>
+				<title type="html">&lt;a href="https://jira.demo.net/secure/ViewProfile.jspa?name=demo" class="activity-item-user activity-item-author">Demo User&lt;/a> created       &lt;a href="https://jira.demo.net/browse/TP-142">TP-142 - T1&lt;/a></title>
+				<author
+					xmlns:usr="http://streams.atlassian.com/syndication/username/1.0">
+					<name>Demo User</name>
+					<uri>https://jira.demo.net/secure/ViewProfile.jspa?name=demo</uri>
+					<link
+						xmlns:media="http://purl.org/syndication/atommedia" rel="photo" href="https://jira.demo.net/secure/useravatar?ownerId=demo&amp;avatarId=10900&amp;s=16" media:height="16" media:width="16"/>
+						<link
+							xmlns:media="http://purl.org/syndication/atommedia" rel="photo" href="https://jira.demo.net/secure/useravatar?ownerId=demo&amp;avatarId=10900&amp;s=48" media:height="48" media:width="48"/>
+							<usr:username>demo</usr:username>
+							<activity:object-type>http://activitystrea.ms/schema/1.0/person</activity:object-type>
+						</author>
+						<published>2022-11-15T15:59:09.000Z</published>
+						<updated>2022-11-15T15:59:09.000Z</updated>
+						<category term="created"/>
+						<link href="https://jira.demo.net/browse/TP-142" rel="alternate"/>
+						<link href="https://jira.demo.net/secure/viewavatar?size=xsmall&amp;avatarId=10418&amp;avatarType=issuetype" rel="http://streams.atlassian.com/syndication/icon" title="Task"/>
+						<link href="https://jira.demo.net/s/v5oegm/820010/1dlckms/1.0/_/download/resources/jira.webresources:global-static/wiki-renderer.css" rel="http://streams.atlassian.com/syndication/css"/>
+						<link href="https://jira.demo.net/plugins/servlet/streamscomments/issues/TP-142" rel="http://streams.atlassian.com/syndication/reply-to"/>
+						<generator uri="https://jira.demo.net"/>
+						<atlassian:application>com.atlassian.jira</atlassian:application>
+						<activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
+						<activity:object>
+							<id>urn:uuid:26253be2-79f0-32be-ba44-a75eca902e6d</id>
+							<title type="text">TP-142</title>
+							<summary type="text">T1</summary>
+							<link rel="alternate" href="https://jira.demo.net/browse/TP-142"/>
+							<activity:object-type>http://streams.atlassian.com/syndication/types/issue</activity:object-type>
+						</activity:object>
+						<atlassian:timezone-offset>-0500</atlassian:timezone-offset>
+					</entry>
+				</feed>
