@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/mmcdole/gofeed v1.1.4-0.20220530151727-7c163b185c39
-	github.com/rickar/cal/v2 v2.1.8
+	github.com/rickar/cal/v2 v2.1.9
 	github.com/stretchr/testify v1.8.1
 	github.com/tj/go-naturaldate v1.3.0
 	golang.org/x/exp v0.0.0-20221114191408-850992195362
@@ -28,5 +28,3 @@ require (
 	golang.org/x/text v0.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/rickar/cal/v2 => github.com/leonardinius/cal/v2 v2.0.0-20221124084219-3b52e3c76172

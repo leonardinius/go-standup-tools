@@ -89,7 +89,7 @@ func main() {
 	feed = feed.SortItems(sortItemsByUpdatedFn)
 
 	txt := render.RenderStandupTXT(feed)
-	log.Printf("Text:\n%s\n", txt)
+	log.Printf("[INFO ] Text:\n%s\n", txt)
 	html := render.RenderStandupHTML(feed)
 	if err := clipboard.CopyHTMLToClipboardAsRTF(html); err != nil {
 		log.Fatalf("Err: %+v", err)
