@@ -58,7 +58,7 @@ func main() {
 		if sinceParsed, err := naturaldate.Parse(opts.Since, dateNow, optionPast); err == nil && sinceParsed != dateNow {
 			sinceDateTime = sinceParsed
 		} else {
-			log.Fatalf("Err: unexpected input %s (%+v)", opts.Since, err)
+			log.Fatalf("[ERROR] Err: unexpected input %s (%+v)", opts.Since, err)
 		}
 	}
 
@@ -75,7 +75,7 @@ func main() {
 	ctx := context.Background()
 	feed, err := activityfeed.ParseFromURL(config, ctx)
 	if err != nil {
-		log.Fatalf("Err: %+v", err)
+		log.Fatalf("[ERROR] Err: %+v", err)
 	}
 
 	feed = feed.SortItems(sortReverse(sortItemsByUpdatedFn))
@@ -92,7 +92,7 @@ func main() {
 	log.Printf("[INFO ] Text:\n%s\n", txt)
 	html := render.RenderStandupHTML(feed)
 	if err := clipboard.CopyHTMLToClipboardAsRTF(html); err != nil {
-		log.Fatalf("Err: %+v", err)
+		log.Fatalf("[ERROR] Err: %+v", err)
 	}
 	log.Printf("[INFO ] ✔️ copied to clipboard!")
 }
