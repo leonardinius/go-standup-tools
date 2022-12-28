@@ -32,6 +32,7 @@ type cliOpts struct {
 	Password  string `long:"password" env:"JIRA_PASSWORD" required:"true" default:"testflo" description:"your jira api token or password"`
 	AccountID string `long:"account-id" env:"JIRA_ACCOUNT_ID" required:"false" default:"" description:"your account ID"`
 	Since     string `long:"since" required:"false" default:"" description:"human readable date, e.g. 'yesterday'"`
+	Till      string `long:"till" required:"false" default:"" description:"human readable date, e.g. 'today'"`
 	Verbose   bool   `long:"verbose" short:"v" required:"false" description:"verbose output"`
 }
 
@@ -52,13 +53,20 @@ func main() {
 		opts.AccountID = opts.Username
 	}
 
-	sinceDateTime, dateNow := standupReportDateRange()
+	naturaldateOptions := naturaldate.WithDirection(naturaldate.Past)
+	sinceDateTime, tillDateTime := standupReportDateRange()
 	if opts.Since != "" {
-		optionPast := naturaldate.WithDirection(naturaldate.Past)
-		if sinceParsed, err := naturaldate.Parse(opts.Since, dateNow, optionPast); err == nil && sinceParsed != dateNow {
+		if sinceParsed, err := naturaldate.Parse(opts.Since, time.Now(), naturaldateOptions); err == nil && sinceParsed != tillDateTime {
 			sinceDateTime = sinceParsed
 		} else {
 			log.Fatalf("[ERROR] Err: unexpected input %s (%+v)", opts.Since, err)
+		}
+	}
+	if opts.Till != "" {
+		if tillParsed, err := naturaldate.Parse(opts.Till, time.Now(), naturaldateOptions); err == nil && tillParsed != tillDateTime {
+			tillDateTime = tillParsed
+		} else {
+			log.Fatalf("[ERROR] Err: unexpected input %s (%+v)", opts.Till, err)
 		}
 	}
 
@@ -69,7 +77,7 @@ func main() {
 		AccountID: opts.AccountID,
 	}
 	if opts.Verbose {
-		log.Printf("[INFO ] %#v\n%s-%s", config, sinceDateTime.Format(dateStringFormat), dateNow.Format(dateStringFormat))
+		log.Printf("[INFO ] %#v\n%s-%s", config, sinceDateTime.Format(dateStringFormat), tillDateTime.Format(dateStringFormat))
 	}
 
 	ctx := context.Background()
@@ -81,7 +89,7 @@ func main() {
 	feed = feed.SortItems(sortReverse(sortItemsByUpdatedFn))
 	feed = feed.FilterItems(func(item *activityfeed.ReportItem) bool {
 		if item.Updated.After(sinceDateTime) || item.Updated.Equal(sinceDateTime) {
-			return item.Updated.Before(dateNow)
+			return item.Updated.Before(tillDateTime)
 		}
 		return false
 	})

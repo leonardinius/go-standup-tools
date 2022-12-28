@@ -89,7 +89,7 @@ func ParseFromURL(cfg *Config, ctx context.Context) (report ActivityFeedReport, 
 	defer cancel()
 
 	var feed *gofeed.Feed
-	if feed, err = fp.ParseURLWithContext(RssURL(cfg.Host, cfg.AccountID, 999), cancelCtx); err != nil {
+	if feed, err = fp.ParseURLWithContext(RssURL(cfg.Host, cfg.AccountID, 99999), cancelCtx); err != nil {
 		return nil, err
 	}
 
