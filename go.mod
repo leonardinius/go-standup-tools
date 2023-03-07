@@ -6,7 +6,7 @@ require (
 	github.com/gomarkdown/markdown v0.0.0-20221013030248-663e2500819c
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jessevdk/go-flags v1.5.0
-	github.com/mmcdole/gofeed v1.2.0
+	github.com/mmcdole/gofeed v1.2.1
 	github.com/rickar/cal/v2 v2.1.11
 	github.com/stretchr/testify v1.8.2
 	github.com/tj/go-naturaldate v1.3.0
