@@ -63,7 +63,7 @@ tasks:
     generates:
       - /tmp/go-jira-tools.log
     cmds:
-      - go test -race -timeout=120s -count 1 -parallel 4 -v ./... -json | tee /tmp/go-jira-tools.log
+      - go test -race -timeout=120s -count 1 -parallel 4 -v ./... -json  2>&1 > /tmp/go-jira-tools.log
 
   go-gotestfmt:
     desc: Summarizes test run
