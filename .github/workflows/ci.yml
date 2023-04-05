@@ -35,3 +35,11 @@ jobs:
         run: curl -sL https://taskfile.dev/install.sh | sh
       - name: Run tests
         run: ./bin/task -v test
+      - name: Upload log files
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: go-jira-tools.log
+          path: |
+            /tmp/go-jira-tools.log
+          if-no-files-found: error
