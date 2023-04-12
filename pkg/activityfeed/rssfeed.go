@@ -77,8 +77,8 @@ func RssURL(domain, accountID string, maxResults int, updatedAfter, updatedBefor
 		"domain":        domain,
 		"accountId":     accountID,
 		"maxResults":    strconv.FormatInt(int64(maxResults), 10),
-		"updatedAfter":  strconv.FormatInt(int64(updatedAfter), 10),
-		"updatedBefore": strconv.FormatInt(int64(updatedBefore), 10),
+		"updatedAfter":  strconv.FormatInt(updatedAfter, 10),
+		"updatedBefore": strconv.FormatInt(updatedBefore, 10),
 	}
 	return os.Expand(
 		"${domain}/plugins/servlet/streams?"+
@@ -105,8 +105,8 @@ func ParseFromURL(cfg *Config, ctx context.Context) (report ActivityFeedReport, 
 	defer cancel()
 
 	max := cfg.MaxItems
-	updatedAfterFilter := 1000 * int64(cfg.SinceDate.Unix())
-	updatedBeforeFilter := 1000 * int64(cfg.TillDate.Unix())
+	updatedAfterFilter := 1000 * cfg.SinceDate.Unix()
+	updatedBeforeFilter := 1000 * cfg.TillDate.Unix()
 	var feed *gofeed.Feed
 
 	const maxItemsPerRequest = 1000
@@ -137,7 +137,7 @@ func ParseFromURL(cfg *Config, ctx context.Context) (report ActivityFeedReport, 
 			}
 		}
 	}
-	return
+	return report, err
 }
 
 func ParseFromReader(reader io.Reader) (report ActivityFeedReport, err error) {
