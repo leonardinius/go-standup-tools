@@ -34,7 +34,7 @@ jobs:
       - name: Install Taskfile
         run: curl -sL https://taskfile.dev/install.sh | sh
       - name: Run tests
-        run: ./bin/task -v test
+        run: ./bin/task -v ci-test
       - name: Upload log files
         uses: actions/upload-artifact@v3
         if: always()

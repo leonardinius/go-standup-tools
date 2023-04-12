@@ -8,6 +8,12 @@ tasks:
     cmds:
       - task: test
 
+  ci-test:
+    desc: Run tests.
+    cmds:
+      - task: go-test
+      - task: go-gotestfmt
+
   test:
     desc: Run tests.
     cmds:
