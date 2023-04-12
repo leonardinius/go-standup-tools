@@ -4,7 +4,7 @@ go-jira-tools is a command-line tool written in Go that generates daily standup 
 activity feed.
 It extracts the relevant information from the activity feed, and formats it into an easy-to-read
 template.
-As well as auttomatically copies that to the clipboard.
+As well as automatically copies that to the clipboard.
 
 # Installation
 
