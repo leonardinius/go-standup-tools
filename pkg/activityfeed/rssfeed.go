@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
+	"math"
 	"os"
 	"sort"
 	"strconv"
@@ -22,6 +24,10 @@ type Config struct {
 	Username  string
 	Password  string
 	AccountID string
+	MaxItems  int
+	SinceDate time.Time
+	TillDate  time.Time
+	Verbose   bool
 }
 
 type ReportItem struct {
@@ -66,14 +72,24 @@ func (i *ReportItem) String() string {
 	return string(bytes)
 }
 
-func RssURL(domain, accountID string, maxResults int) string {
+func RssURL(domain, accountID string, maxResults int, updatedAfter, updatedBefore int64) string {
 	urlVariables := map[string]string{
-		"domain":     domain,
-		"accountId":  accountID,
-		"maxResults": strconv.FormatInt(int64(maxResults), 10),
+		"domain":        domain,
+		"accountId":     accountID,
+		"maxResults":    strconv.FormatInt(int64(maxResults), 10),
+		"updatedAfter":  strconv.FormatInt(int64(updatedAfter), 10),
+		"updatedBefore": strconv.FormatInt(int64(updatedBefore), 10),
 	}
 	return os.Expand(
-		"${domain}/activity?maxResults=${maxResults}&streams=account-id+IS+${accountId}&os_authType=basic",
+		"${domain}/plugins/servlet/streams?"+
+			strings.Join(
+				[]string{
+					"maxResults=${maxResults}",
+					"streams=update-date+AFTER+${updatedAfter}",
+					"streams=update-date+BEFORE+${updatedBefore}",
+					"streams=account-id+IS+${accountId}",
+					"os_authType=basic"},
+				"&"),
 		func(s string) string { return urlVariables[s] },
 	)
 }
@@ -88,12 +104,40 @@ func ParseFromURL(cfg *Config, ctx context.Context) (report ActivityFeedReport, 
 	cancelCtx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
 
+	max := cfg.MaxItems
+	updatedAfterFilter := 1000 * int64(cfg.SinceDate.Unix())
+	updatedBeforeFilter := 1000 * int64(cfg.TillDate.Unix())
 	var feed *gofeed.Feed
-	if feed, err = fp.ParseURLWithContext(RssURL(cfg.Host, cfg.AccountID, 99999), cancelCtx); err != nil {
-		return nil, err
-	}
 
-	return parseFeedItems(feed)
+	const maxItemsPerRequest = 1000
+	for max > 0 {
+		url := RssURL(cfg.Host, cfg.AccountID, maxItemsPerRequest, updatedAfterFilter, updatedBeforeFilter)
+		if cfg.Verbose {
+			log.Printf("[INFO ] Fetching %s", url)
+		}
+		if feed, err = fp.ParseURLWithContext(url, cancelCtx); err != nil {
+			return nil, err
+		}
+
+		if _report, _err := parseFeedItems(feed); _err != nil {
+			return nil, _err
+		} else {
+			max -= _report.Len()
+			report = append(report, _report...)
+			if cfg.Verbose {
+				log.Printf("[INFO ] page of %d items, total %d", _report.Len(), report.Len())
+			}
+			if _report.Len() == 0 {
+				break
+			}
+			updatedBeforeFilter = 1000 * int64(math.Min(float64(_report[0].Updated.Unix()), float64(_report[_report.Len()-1].Updated.Unix())))
+			updatedBeforeFilter += 1 // may allow duplicates
+			if updatedBeforeFilter < updatedAfterFilter {
+				break
+			}
+		}
+	}
+	return
 }
 
 func ParseFromReader(reader io.Reader) (report ActivityFeedReport, err error) {

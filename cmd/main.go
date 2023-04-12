@@ -31,9 +31,29 @@ type cliOpts struct {
 	Username  string `long:"username" env:"JIRA_USER" required:"true" description:"your jira user"`
 	Password  string `long:"password" env:"JIRA_PASSWORD" required:"true" default:"testflo" description:"your jira api token or password"`
 	AccountID string `long:"account-id" env:"JIRA_ACCOUNT_ID" required:"false" default:"" description:"your account ID"`
+	MaxItems  int    `long:"max-items" required:"false" default:"10000" description:"max items to fetch"`
 	Since     string `long:"since" required:"false" default:"" description:"human readable date, e.g. 'yesterday'"`
 	Till      string `long:"till" required:"false" default:"" description:"human readable date, e.g. 'today'"`
 	Verbose   bool   `long:"verbose" short:"v" required:"false" description:"verbose output"`
+}
+
+func ParseNaturalDate(dateString string, timeNow time.Time) (time.Time, error) {
+
+	if parsedDate, err := time.Parse(time.DateOnly, dateString); err == nil {
+		return parsedDate, nil
+	}
+
+	if parsedDate, err := time.Parse(time.DateTime, dateString); err == nil {
+		return parsedDate, nil
+	}
+
+	dateNow := time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day(), 0, 0, 0, 0, time.UTC)
+	naturaldateOptions := naturaldate.WithDirection(naturaldate.Past)
+	if parsedDate, err := naturaldate.Parse(dateString, dateNow, naturaldateOptions); err == nil && parsedDate != dateNow {
+		return parsedDate, nil
+	} else {
+		return parsedDate, err
+	}
 }
 
 func main() {
@@ -53,19 +73,17 @@ func main() {
 		opts.AccountID = opts.Username
 	}
 
-	naturaldateOptions := naturaldate.WithDirection(naturaldate.Past)
+	var err error
 	sinceDateTime, tillDateTime := standupReportDateRange()
 	if opts.Since != "" {
-		if sinceParsed, err := naturaldate.Parse(opts.Since, time.Now(), naturaldateOptions); err == nil && sinceParsed != tillDateTime {
-			sinceDateTime = sinceParsed
-		} else {
+		sinceDateTime, err = ParseNaturalDate(opts.Since, time.Now())
+		if err != nil {
 			log.Fatalf("[ERROR] Err: unexpected input %s (%+v)", opts.Since, err)
 		}
 	}
 	if opts.Till != "" {
-		if tillParsed, err := naturaldate.Parse(opts.Till, time.Now(), naturaldateOptions); err == nil && tillParsed != tillDateTime {
-			tillDateTime = tillParsed
-		} else {
+		tillDateTime, err = ParseNaturalDate(opts.Till, time.Now())
+		if err != nil {
 			log.Fatalf("[ERROR] Err: unexpected input %s (%+v)", opts.Till, err)
 		}
 	}
@@ -75,6 +93,10 @@ func main() {
 		Username:  opts.Username,
 		Password:  opts.Password,
 		AccountID: opts.AccountID,
+		MaxItems:  opts.MaxItems,
+		SinceDate: sinceDateTime,
+		TillDate:  tillDateTime,
+		Verbose:   opts.Verbose,
 	}
 	if opts.Verbose {
 		log.Printf("[INFO ] %#v\n%s-%s", config, sinceDateTime.Format(dateStringFormat), tillDateTime.Format(dateStringFormat))
