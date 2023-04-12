@@ -130,8 +130,8 @@ func ParseFromURL(cfg *Config, ctx context.Context) (report ActivityFeedReport, 
 			if _report.Len() == 0 {
 				break
 			}
+			// may allow duplicates
 			updatedBeforeFilter = 1000 * int64(math.Min(float64(_report[0].Updated.Unix()), float64(_report[_report.Len()-1].Updated.Unix())))
-			updatedBeforeFilter += 1 // may allow duplicates
 			if updatedBeforeFilter < updatedAfterFilter {
 				break
 			}
