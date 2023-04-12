@@ -1,25 +1,24 @@
 # go-jira-tools
 
-go-jira-tools is a command-line tool written in Go that generates daily standup notes based on Jira
-activity feed.
-It extracts the relevant information from the activity feed, and formats it into an easy-to-read
-template.
-As well as automatically copies that to the clipboard.
+go-jira-tools is a command-line tool written in Go that generates daily standup notes based on Jira activity feed. 
+It extracts the relevant information from the activity feed and formats it into an easy-to-read template. 
+Additionally, it automatically copies the output to the clipboard.
 
-# Installation
+## Installation
 
-To install go-jira-tools,
+To install go-jira-tools, follow the steps below:
 
--   clone this repository,
--   `cp .run.example.sh .run.sh`, adjust
--   `./run.sh`
+1. Clone this repository to your local machine.
+2. Copy the `run.example.sh` file to `run.sh` and adjust it as necessary.
+3. Run `./run.sh`.
 
-# Usage
+## Usage
 
 To generate a daily standup notes template, run the following command:
 
 ```bash
 ./run.sh
+
 ```
 
 This will produce the standup notes in the following format:
