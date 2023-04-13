@@ -8,6 +8,7 @@ import (
 )
 
 func TestURL(t *testing.T) {
+	t.Parallel()
 	assert.Equal(
 		t,
 		"https://test-domain.com/plugins/servlet/streams?maxResults=10&streams=update-date+AFTER+0&streams=update-date+BEFORE+1&streams=account-id+IS+userId&os_authType=basic",

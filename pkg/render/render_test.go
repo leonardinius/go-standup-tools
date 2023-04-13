@@ -11,6 +11,8 @@ import (
 )
 
 func TestRenderFunctions(t *testing.T) {
+	t.Parallel()
+
 	yesterday := time.Date(2022, time.November, 25, 0, 0, 0, 0, time.UTC)
 	today := time.Date(2022, time.November, 26, 0, 0, 0, 0, time.UTC)
 	feed := activityfeed.ActivityFeedReport{

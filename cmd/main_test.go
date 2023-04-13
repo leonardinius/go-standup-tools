@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"log"
 	"testing"
 	"time"
 
@@ -8,19 +9,23 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNaturalDateParse(t *testing.T) {
-	datetimeParse := func(input string) time.Time {
+var (
+	datetimeParse = func(input string) time.Time {
 		if value, err := time.Parse(time.DateOnly, input); err == nil {
 			return value
 		}
 		if value, err := time.Parse(time.DateTime, input); err == nil {
 			return value
 		}
-		t.Errorf("unable to parse %s as date time", input)
+		log.Panicf("unable to parse %s as date time", input)
 		return time.Time{}
 	}
 
-	today := datetimeParse("2023-11-05")
+	today = datetimeParse("2023-11-05")
+)
+
+func TestNaturalDateParse(t *testing.T) {
+	t.Parallel()
 
 	suite := []struct {
 		name         string

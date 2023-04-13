@@ -11,6 +11,7 @@ import (
 )
 
 func TestParseExamples(t *testing.T) {
+	t.Parallel()
 	file, err := os.Open("testData/activity.xml")
 	require.Nil(t, err, "Unexpected error")
 	feed, err := activityfeed.ParseFromReader(file)
