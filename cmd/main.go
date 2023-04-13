@@ -5,14 +5,16 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/jessevdk/go-flags"
 	"github.com/leonardinius/go-standup-tools/pkg/activityfeed"
 	"github.com/leonardinius/go-standup-tools/pkg/clipboard"
 	"github.com/leonardinius/go-standup-tools/pkg/render"
-	"github.com/rickar/cal/v2"
+	calendar "github.com/rickar/cal/v2"
 	"github.com/rickar/cal/v2/lv"
+	"github.com/rickar/cal/v2/us"
 	"github.com/tj/go-naturaldate"
 )
 
@@ -31,7 +33,7 @@ type cliOpts struct {
 	Username  string `long:"username" env:"JIRA_USER" required:"true" description:"your jira user"`
 	Password  string `long:"password" env:"JIRA_PASSWORD" required:"true" default:"testflo" description:"your jira api token or password"`
 	AccountID string `long:"account-id" env:"JIRA_ACCOUNT_ID" required:"false" default:"" description:"your account ID"`
-	MaxItems  int    `long:"max-items" required:"false" default:"10000" description:"max items to fetch"`
+	Calendar  string `long:"calendar" env:"CALENDAR" required:"false" description:"business days calendar" choice:"lv" choice:"us" default:"us"`
 	Since     string `long:"since" required:"false" default:"" description:"human readable date, e.g. 'yesterday'"`
 	Till      string `long:"till" required:"false" default:"" description:"human readable date, e.g. 'today'"`
 	Verbose   bool   `long:"verbose" short:"v" required:"false" description:"verbose output"`
@@ -74,7 +76,8 @@ func main() {
 	}
 
 	var err error
-	sinceDateTime, tillDateTime := standupReportDateRange()
+	c := loadBusinessDaysCalendar(opts.Calendar)
+	sinceDateTime, tillDateTime := standupReportDateRange(c)
 	if opts.Since != "" {
 		sinceDateTime, err = ParseNaturalDate(opts.Since, time.Now())
 		if err != nil {
@@ -88,18 +91,25 @@ func main() {
 		}
 	}
 
+	if opts.Verbose {
+		log.Printf("[INFO ] config%s", strings.Join([]string{
+			"",
+			fmt.Sprintf("host: %s", opts.Host),
+			fmt.Sprintf("username: %s", opts.Username),
+			fmt.Sprintf("accountID: %s", opts.AccountID),
+			fmt.Sprintf("calendar: %s", opts.Calendar),
+			fmt.Sprintf("dates: %s ... %s", sinceDateTime.Format(dateStringFormat), tillDateTime.Format(dateStringFormat)),
+		}, "\n\t"))
+	}
+
 	config := &activityfeed.Config{
 		Host:      opts.Host,
 		Username:  opts.Username,
 		Password:  opts.Password,
 		AccountID: opts.AccountID,
-		MaxItems:  opts.MaxItems,
 		SinceDate: sinceDateTime,
 		TillDate:  tillDateTime,
 		Verbose:   opts.Verbose,
-	}
-	if opts.Verbose {
-		log.Printf("[INFO ] %#v\n%s-%s", config, sinceDateTime.Format(dateStringFormat), tillDateTime.Format(dateStringFormat))
 	}
 
 	ctx := context.Background()
@@ -127,15 +137,27 @@ func main() {
 	log.Printf("[INFO ] ✔️ copied to clipboard!")
 }
 
-func standupReportDateRange() (prevWorkDate, dateNow time.Time) {
-	c := cal.NewBusinessCalendar()
+func loadBusinessDaysCalendar(cal string) *calendar.BusinessCalendar {
+	var c *calendar.BusinessCalendar
 	// add holidays that the business observes
-	c.AddHoliday(lv.Holidays...)
+	switch cal {
+	case "us":
+		c = calendar.NewBusinessCalendar()
+		c.AddHoliday(us.Holidays...)
+	case "lv":
+		c = calendar.NewBusinessCalendar()
+		c.AddHoliday(lv.Holidays...)
+	default:
+		log.Fatalf("[ERROR] Err: unsupported calendar %s", cal)
+	}
+	return c
+}
 
+func standupReportDateRange(cal *calendar.BusinessCalendar) (prevWorkDate, dateNow time.Time) {
 	timeNow := time.Now()
 	dateNow = time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day(), 0, 0, 0, 0, time.UTC)
 
-	prevWorkTime := c.WorkdaysFrom(dateNow, -1)
+	prevWorkTime := cal.WorkdaysFrom(dateNow, -1)
 	prevWorkDate = time.Date(prevWorkTime.Year(), prevWorkTime.Month(), prevWorkTime.Day(), 0, 0, 0, 0, time.UTC)
 	return prevWorkDate, dateNow
 }

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd "$(dirname "$0")"
+
 go run ./... \
   --host=http://demo.testflo.com/server \
   --username=testflo \
