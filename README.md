@@ -24,7 +24,6 @@ To generate a daily standup notes template, run the following command:
 This will produce the standup notes in the following format:
 
 ```
-Copy code
 2023/04/12 17:46:38 [INFO ] Text:
 
 -   **2023-03-30**
