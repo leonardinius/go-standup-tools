@@ -124,7 +124,7 @@ func ParseFromURL(cfg *Config, ctx context.Context) (report ActivityFeedReport, 
 			if cfg.Verbose {
 				log.Printf("[INFO ] page of %d items, total %d", _report.Len(), report.Len())
 			}
-			if _report.Len() == 0 {
+			if _report.Len() < maxItemsPerRequest*0.2 {
 				break
 			}
 			// may skip same millisecond events
