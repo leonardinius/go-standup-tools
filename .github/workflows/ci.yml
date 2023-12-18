@@ -28,7 +28,7 @@ jobs:
       - name: Run tests
         run: ./bin/task -v ci-test
       - name: Upload log files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: go-jira-tools.log
