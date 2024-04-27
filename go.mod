@@ -3,7 +3,7 @@ module github.com/leonardinius/go-standup-tools
 go 1.19
 
 require (
-	github.com/gomarkdown/markdown v0.0.0-20221013030248-663e2500819c
+	github.com/gomarkdown/markdown v0.0.0-20240419095408-642f0ee99ae2
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/mmcdole/gofeed v1.3.0
