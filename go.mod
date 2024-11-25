@@ -8,7 +8,7 @@ require (
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/mmcdole/gofeed v1.3.0
 	github.com/rickar/cal/v2 v2.1.19
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/tj/go-naturaldate v1.3.0
 	golang.org/x/exp v0.0.0-20221114191408-850992195362
 )
