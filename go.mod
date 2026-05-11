@@ -1,6 +1,6 @@
 module github.com/leonardinius/go-standup-tools
 
-go 1.19
+go 1.25.0
 
 require (
 	github.com/gomarkdown/markdown v0.0.0-20240419095408-642f0ee99ae2
@@ -24,7 +24,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
-	golang.org/x/sys v0.29.0 // indirect
+	golang.org/x/sys v0.44.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
